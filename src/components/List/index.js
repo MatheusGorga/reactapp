@@ -1,25 +1,29 @@
-import { useCallback, useEffect, useState } from "react"
+import { useCallback, useEffect, useState, useMemo } from "react";
 
-const set = new Set()
+const set = new Set();
 
-export default function List(){
-  const [contador, setContador] = useState(1)
-      
-      function handleSetContador(){
-        setContador((preState) => preState + 1)
-        set.add(handleSetContador)
-      }
+export default function List() {
+  const [contador, setContador] = useState(1);
 
-      console.log(set.size)
+  const handleSetContador = useCallback(() => {
+    setContador((preState) => preState + 1);
+    set.add(handleSetContador);
+  }, []);
 
-      return(
-        <div>
-          <h1>Contador: { contador}</h1>
-          <button onClick={ handleSetContador} >+</button>
-        </div>
-      )
+  useEffect(() => {
+    async function setUserRepositories() {
+      await localStorage.setItem("user-repositories", JSON.stringify({}));
+    }
+    setUserRepositories();
+  }, []);
+
+  return (
+    <div>
+      <h1>Contador: {contador}</h1>
+      <button onClick={handleSetContador}>+</button>
+    </div>
+  );
 }
-
 
 /*
     useEffect(() =>{     
@@ -32,5 +36,15 @@ export default function List(){
         return () => {
           console.log("desmontou")
         }
+      }, [])
+
+      const number = useMemo(() => {
+      return (132786178236 * 123981023)
+      },[])
+      console.log(number)
+
+      const handleSetContador = useCallback(()=> {
+        setContador((preState) => preState + 1)
+        set.add(handleSetContador)
       }, [])
 */
